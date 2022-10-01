@@ -1,4 +1,5 @@
 import sdl2
+import ctypes
 
 
 class Game(object):
@@ -6,8 +7,10 @@ class Game(object):
         self.window = None
         self.running = True
 
+    # Public methods
+
     def initialize(self) -> bool:
-        # Initialize video device
+        # Initialize video subsystem
         result = sdl2.SDL_Init(sdl2.SDL_INIT_VIDEO)
         if result != 0:
             sdl2.SDL_Log("Initialization failed: ", sdl2.SDL_GetError())
@@ -32,9 +35,19 @@ class Game(object):
         sdl2.SDL_DestroyWindow(self.window)
         sdl2.SDL_Quit()
 
-    # Helper members
+    # Helper methods
+
     def _process_input(self) -> None:
-        pass
+        event = sdl2.SDL_Event()
+        # Process pending events in events-queue
+        while sdl2.SDL_PollEvent(event):
+            if event.type == sdl2.SDL_QUIT:
+                self.running = False
+
+        # Process keyboard state
+        keyb_state = sdl2.SDL_GetKeyboardState(None)
+        if keyb_state[sdl2.SDL_SCANCODE_ESCAPE]:
+            self.running = False
 
     def _process_update(self) -> None:
         pass
