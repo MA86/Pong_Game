@@ -7,8 +7,9 @@ class Game(object):
         self.window = None
         self.renderer = None
         self.running = True
+        self.thick = 15
 
-    # Public methods
+    # Public methods:
 
     def initialize(self) -> bool:
         # Initialize graphics subsystem
@@ -44,12 +45,12 @@ class Game(object):
             self._process_output()
 
     def shutdown(self) -> None:
-        # Destroy in reverse
+        # Shutdown in reverse
         sdl2.SDL_DestroyRenderer(self.renderer)
         sdl2.SDL_DestroyWindow(self.window)
         sdl2.SDL_Quit()
 
-    # Helper methods
+    # Helper methods:
 
     def _process_input(self) -> None:
         event = sdl2.SDL_Event()
@@ -67,6 +68,18 @@ class Game(object):
         pass
 
     def _process_output(self) -> None:
-        sdl2.SDL_SetRenderDrawColor(self.renderer, 0, 0, 255, 255)
+        # Clear color-buffer to blue
+        sdl2.SDL_SetRenderDrawColor(self.renderer, 105, 105, 105, 255)
         sdl2.SDL_RenderClear(self.renderer)
+
+        # Draw scene to color-buffer:
+        sdl2.SDL_SetRenderDrawColor(self.renderer, 192, 192, 192, 255)  # Color
+        top_wall = sdl2.SDL_Rect(0, 0, 1024, self.thick)    # Shapes
+        bot_wall = sdl2.SDL_Rect(0, 768-self.thick, 1024, self.thick)
+        right_wall = sdl2.SDL_Rect(1024-self.thick, 0, self.thick, 1024)
+        sdl2.SDL_RenderFillRect(self.renderer, top_wall)    # Draws
+        sdl2.SDL_RenderFillRect(self.renderer, bot_wall)
+        sdl2.SDL_RenderFillRect(self.renderer, right_wall)
+
+        # Swap color-buffer to update screen
         sdl2.SDL_RenderPresent(self.renderer)
