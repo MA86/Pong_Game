@@ -8,7 +8,7 @@ Python and SDL2 (Simple Directmedia Layer) which is a low-level 3D game programm
 
 ## Demonstration
 
-Coming Soon
+![pong_gameplay](https://user-images.githubusercontent.com/22569153/195492841-345c090e-f0e8-4af1-a63b-cadfd69a816b.png)
 
 Note: All source code for this game is inside `.py` files.
 
