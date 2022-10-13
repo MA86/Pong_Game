@@ -1,4 +1,6 @@
+import this
 import sdl2
+import builtins
 from vector2d import *
 
 
@@ -17,6 +19,7 @@ class Game(object):
 
         # Variables for movement
         self._paddle_dir = 0
+        self._ball_vel = Vector2(-200.0, 235.0)
 
     # These are public methods:
 
@@ -103,7 +106,27 @@ class Game(object):
             elif self._paddle_pos.y > (768.0 - self._paddle_h/2.0 - self._thick):
                 self._paddle_pos.y = 768.0 - self._paddle_h/2.0 - self._thick
 
-        # TODO: ball...
+        # Update ball pos based on velocity
+        self._ball_pos.x += self._ball_vel.x * delta_time
+        self._ball_pos.y += self._ball_vel.y * delta_time
+
+        # Check intersection with paddle
+        difference = self._paddle_pos.y - self._ball_pos.y
+        difference = builtins.abs(difference)
+        if (difference <= self._paddle_h / 2.0 and      # y diff small enough?
+        self._ball_pos.x <= 25.0 and    # In correct x pos
+        self._ball_pos.x >= 20.0 and    
+        self._ball_vel.x < 0.0):        # Ball moving left
+            self._ball_vel.x *= -1.0
+        elif (self._ball_pos.x <= 0.0): # Is ball offscreen?
+            self._running = False
+        elif (self._ball_pos.x >= (1024.0 - self._thick) and self._ball_vel.x > 0.0): # Collide w/ r-wall?
+            self._ball_vel.x *= -1.0
+
+        if (self._ball_pos.y <= self._thick and self._ball_vel.y < 0.0):    # Collide w/ t-wall?
+            self._ball_vel.y *= -1
+        elif (self._ball_pos.y >= (768 - self._thick) and self._ball_vel.y > 0.0):  # Collide w/ b-wall?
+            self._ball_vel.y *= -1
 
     def _process_output(self) -> None:
         # Clear color-buffer to blue
