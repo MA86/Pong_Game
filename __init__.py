@@ -1,2 +1,2 @@
 # Modules in this package
-__all__ = ["game"]
+__all__ = ["game", "main", "vector2d"]
